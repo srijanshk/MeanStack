@@ -1,0 +1,27 @@
+[
+    {
+      "displayName": "Full Name",
+      "access": "fullname",
+      "type": "string"
+    },
+    {
+        "displayName": "Date of Birth",
+        "access": "DOB",
+        "type" : "date"
+    },
+    {
+        "displayName": "Gender",
+        "access": "gender",
+        "type" : "string"
+    },
+    {
+        "displayName": "Salary",
+        "access": "salary",
+        "type" : "number"
+    },
+    {
+        "displayName": "Designation",
+        "access": "designation",
+        "type" : "string"
+    }
+]
