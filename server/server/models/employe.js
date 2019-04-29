@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 
-var EmployeeSchema = mongoose.Schema({
+let Schema = mongoose.Schema;
+
+var Employee = new Schema({
     fullname: {
         type: String,
         required: true
@@ -26,6 +28,9 @@ var EmployeeSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     }
+},
+{
+    timestamps: false
 });
 
-module.exports = mongoose.model('Employee', EmployeeSchema);
+module.exports = mongoose.model('Employee',Employee);
