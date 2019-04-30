@@ -17,10 +17,11 @@ const validateRegistrationBody = () => {
 
 const validateLoginBody = () => {
     return [ 
-        body('username').exists()
+        body('username')
+        .exists()
         .withMessage('username field is required')
-        .isEmail()
-        .withMessage('username is invalid'),
+        .isLength({min:3})
+        .withMessage('name must be greater than 3 letters'),
         body('password')
         .exists()
         .withMessage('password field is required')
@@ -29,7 +30,36 @@ const validateLoginBody = () => {
        ] 
 } 
 
+const validateEmployeeBody = () => {
+    return [
+        body('fullname')
+        .exists()
+        .withMessage('fullname field is required')
+        .isLength({min:3})
+        .withMessage('fullname must be greater than 3 letters'),
+        body('DOB')
+        .exists()
+        .withMessage('DOB field is required')
+        .isDataURI()
+        .withMessage('Date of Birth must be date'),
+        body('gender')
+        .exists()
+        .withMessage('gender field is required')
+        .contains('Male, Female')
+        .withMessage('Gender must be either male or female'),
+        body('salary')
+        .exists()
+        .withMessage('salary field is required')
+        .isNumeric()
+        .withMessage('salary must be a Number'),
+        body('designation')
+        .exists()
+        .withMessage('designation field is required')
+    ]
+}
+
 module.exports = {
     validateRegistrationBody : validateRegistrationBody,
-    validateLoginBody : validateLoginBody
+    validateLoginBody : validateLoginBody,
+    validateEmployeeBody : validateEmployeeBody
 }

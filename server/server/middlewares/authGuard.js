@@ -4,7 +4,7 @@ const config = require('../config/env_config/config');
 
 const authClientToken = async (req,res,next) => {
 
-    let token = req.headers['x-access-token'];
+    let token = req.headers['token'];
     
     if (!token){
         return res.status(401).json({
