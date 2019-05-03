@@ -23,7 +23,7 @@ var Employee = new Schema({
         type: String,
         required: true
     },
-    profilePicture: Buffer,
+    profilePicture: String,
     created_at: {
         type: Date,
         default: Date.now

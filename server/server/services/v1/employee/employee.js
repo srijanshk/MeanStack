@@ -36,7 +36,6 @@ const importsheet = (req,res, next) => {
             employees.push(data);
         })
         .on("end", function() {
-            console.log(employees)
             fs.unlinkSync(req.file.path); 
 
             employeeModel.create(employees, function(err, documents) {
@@ -64,7 +63,6 @@ const importsheet = (req,res, next) => {
             employees.push(data);
         })
         .on("end", function() {
-            console.log(employees)
 
               fs.unlinkSync(req.file.path); 
 
@@ -123,6 +121,48 @@ const getEmployeeDetails = async (req,res, next) => {
     })
 
 }
+const updateEmployee = async (req,res, next) => {
+
+    let { userId } = req.params;
+
+    if (!req.file) {
+        res.json({ error_code: 1, err_desc: "No file passed" });
+        return;
+      }
+    var url = req.protocol + '://' + req.get("host");
+    var imagepath = url + "/uploads/" + req.file.filename;
+
+    let { fullname, DOB, gender, salary, designation, image } = req.body;
+
+    try {
+        let employee = await employeeModel.findByIdAndUpdate(userId, {
+            fullname : fullname,
+            DOB : DOB,
+            gender : gender,
+            salary : salary,
+            designation : designation,
+            profilePicture : imagepath
+        });
+        if(!employee){
+            throw new error();
+        }
+
+        return res.status(201).json({
+            "success" : [{
+                "msg" : "Employee Added Successfully"
+            }]
+        });
+    }catch(error){
+        console.log(error);
+        return res.status(500).json(
+            { 
+                "errors" : [{
+                    "msg": "there was a problem Adding new Employee."   
+                }]
+            }
+        );
+    }
+}
 
 const AddnewEmployee = async (req,res,next) => {
     const errors = validationResult(req);
@@ -130,7 +170,15 @@ const AddnewEmployee = async (req,res,next) => {
     if(!errors.isEmpty()){
         return res.status(422).json({ errors: errors.array() });
     }
-    let { fullname, DOB, gender, salary, designation } = req.body;
+
+    if (!req.file) {
+        res.json({ error_code: 1, err_desc: "No file passed" });
+        return;
+      }
+    var url = req.protocol + '://' + req.get("host");
+    var imagepath = url + "/uploads/" + req.file.filename;
+
+    let { fullname, DOB, gender, salary, designation, image } = req.body;
 
     try {
         let employee = await employeeModel.create({
@@ -138,7 +186,8 @@ const AddnewEmployee = async (req,res,next) => {
             DOB : DOB,
             gender : gender,
             salary : salary,
-            designation : designation
+            designation : designation,
+            profilePicture : imagepath
         });
 
         if(!employee){
@@ -161,10 +210,13 @@ const AddnewEmployee = async (req,res,next) => {
         );
     }
 }
+
+
     
 module.exports = {
     importsheet : importsheet,
     getAllEmployeeDetails : getAllEmployeeDetails,
     getEmployeeDetails : getEmployeeDetails,
-    AddnewEmployee : AddnewEmployee
+    AddnewEmployee : AddnewEmployee,
+    updateEmployee : updateEmployee
 }

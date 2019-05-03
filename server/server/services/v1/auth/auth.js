@@ -14,7 +14,7 @@ const register = async (req,res,next) => {
         return res.status(422).json({ errors: errors.array() });
     }
 
-    let { username, password, roles } = req.body;
+    let { username, password, role } = req.body;
 
     let isUsernameExists = await userModel.findOne({"username" : username});
 
@@ -68,7 +68,7 @@ const login = async (req,res,next) => {
 
     let { username, password } = req.body
 
-    if(errors.isEmpty()){
+    if(!errors.isEmpty()){
         return res.status(422).json({ errors: errors.array() });
     }
 

@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const expressValidator = require('express-validator');
 const log = require('morgan')
+const path = require('path')
+const cors = require('cors')
 
 module.exports = function () {
     let server = express(),
@@ -18,7 +20,7 @@ module.exports = function () {
         
         server.use(function(req, res, next) { //allow cross origin requests
             res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
-            res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+            res.header("Access-Control-Allow-Origin", "http://localhost:4200");
             res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.header("Access-Control-Allow-Credentials", true);
             next();
@@ -29,6 +31,7 @@ module.exports = function () {
         server.use(bodyParser.urlencoded({
             extended: false
         }));
+        server.use('/uploads', express.static(path.join('uploads')))
         server.use(log('combined'));
 
         //connect the database
