@@ -93,12 +93,9 @@ const getAllEmployeeDetails = async (req,res, next) => {
         })
     }
 
-    return res.status(200).json({
-        "success" : [{
-            "msg" : " user fetched successfully",
-            "data" : employees
-        }]
-    });
+    return res.status(200).json(
+        employees
+    );
 }
 
 const getEmployeeDetails = async (req,res, next) => {

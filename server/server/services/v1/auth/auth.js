@@ -77,7 +77,7 @@ const login = async (req,res,next) => {
         let isUserExists = await userModel.findOne({"username" : username});
 
         let isPasswordValid = await bcrypt.compare(password, isUserExists.password);
-
+ 
         if(!isUserExists || !isPasswordValid){
             return res.status(401).json({
                 "errors" : [{
@@ -86,16 +86,21 @@ const login = async (req,res,next) => {
             })
         }
 
-        let token = jwt.sign({ id: isUserExists._id }, config.secret, { expiresIn: 86400 });
+        let token = jwt.sign({ id: isUserExists._id }, config.secret, { expiresIn: 864000000 });
 
 
         res.status(200).json({
             "success" : [{
                 "msg" : "user login successfully",
+                 
+            }],
+            "user" : {
                 "username" : username,
-                  "role" : isUserExists.role,
+                "role" : isUserExists.role,
                 "token" : token
-            }]
+            }
+                
+            
         })
     }catch(error){
         console.log(error);

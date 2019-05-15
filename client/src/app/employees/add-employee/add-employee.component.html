@@ -1,0 +1,62 @@
+<mat-card class="mat-elevation-z8">
+  <mat-icon class="close" (click)="closeDialog()" >close</mat-icon>
+<section class="mat-typography">
+      <h2>Employee</h2>
+    </section>
+  <form [formGroup]="service.form"  (submit)="onSubmit()" >
+  <div class="card-layout">
+  <div class="column-1">
+   <input type="hidden" formControlName="_id">
+   <input type="hidden" formControlName="created_at">
+   <mat-form-field style="width: 300px;" class="field-reason">
+     <input matInput placeholder="Fullname"  formControlName="fullname">
+   </mat-form-field>
+   
+    
+   
+
+   <br>
+   <mat-form-field style="width: 300px;" class="full-width">
+     <input matInput [matDatepicker]="dobDatePicker"
+      placeholder="Date Of Birth" formControlName="DOB">
+        <mat-datepicker-toggle matSuffix [for]="dobDatePicker">
+          </mat-datepicker-toggle>
+        <mat-datepicker #dobDatePicker></mat-datepicker>
+   </mat-form-field>
+
+   <br>
+
+
+   <div class = "box-photo"><img [src]="profilePicture" height="200" > </div>
+    <input placeholder="Photo" type="file" (change)="onSelectFile($event)"  formControlName="profilePicture">
+   </div>
+   <div class="column-2">
+   
+     <mat-form-field style="width: 300px;" class="field-reason">
+    <mat-label>Gender</mat-label>
+            <mat-select gender="gender" formControlName="gender">
+              <mat-option value="Male">Male</mat-option>
+              <mat-option value="Female">Female</mat-option>
+              <mat-option value="Others">Others</mat-option>
+            </mat-select>
+   </mat-form-field>
+
+   <br>
+    <mat-form-field style="width: 300px;" class="field-reason">
+     <input matInput placeholder="Salary"  formControlName="salary">
+   </mat-form-field>
+   <br>
+    <mat-form-field style="width: 300px;" class="field-reason">
+     <input matInput placeholder="Designation"  formControlName="designation">
+   </mat-form-field>
+   </div>
+   </div>
+
+<div>
+      <button mat-raised-button type="submit" >Submit</button> 
+       <button mat-raised-button (click) ="clearForm()" >Clear</button>
+      <button mat-raised-button   (click)="closeDialog()" >Cancel</button>
+</div>
+  </form>
+
+</mat-card>
