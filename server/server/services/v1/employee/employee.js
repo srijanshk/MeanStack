@@ -118,18 +118,13 @@ const getEmployeeDetails = async (req,res, next) => {
     })
 
 }
+
+
 const updateEmployee = async (req,res, next) => {
 
     let { userId } = req.params;
 
-    if (!req.file) {
-        res.json({ error_code: 1, err_desc: "No file passed" });
-        return;
-      }
-    var url = req.protocol + '://' + req.get("host");
-    var imagepath = url + "/uploads/" + req.file.filename;
-
-    let { fullname, DOB, gender, salary, designation, image } = req.body;
+    let { fullname, DOB, gender, salary, designation } = req.body;
 
     try {
         let employee = await employeeModel.findByIdAndUpdate(userId, {
@@ -138,7 +133,6 @@ const updateEmployee = async (req,res, next) => {
             gender : gender,
             salary : salary,
             designation : designation,
-            profilePicture : imagepath
         });
         if(!employee){
             throw new error();
@@ -160,7 +154,28 @@ const updateEmployee = async (req,res, next) => {
         );
     }
 }
+const uploadEmployeeImage = async  (req,res, next) => {
+    if (!req.file) {
+        res.json({ error_code: 1, err_desc: "No file passed" });
+        return;
+      }
+    var url = req.protocol + '://' + req.get("host");
+    var imagepath = url + "/uploads/" + req.file.filename;
+    let { userId } = req.params;
 
+    try{
+        let image = await employeeModel.findOneAndUpdate( userId, {
+            profilePicture : imagepath
+        });
+
+        if(!image){
+            throw new error();
+        }
+    }catch(error){
+        console.log(error);
+    }
+
+}
 const AddnewEmployee = async (req,res,next) => {
     const errors = validationResult(req);
 
@@ -168,12 +183,7 @@ const AddnewEmployee = async (req,res,next) => {
         return res.status(422).json({ errors: errors.array() });
     }
 
-    if (!req.file) {
-        res.json({ error_code: 1, err_desc: "No file passed" });
-        return;
-      }
-    var url = req.protocol + '://' + req.get("host");
-    var imagepath = url + "/uploads/" + req.file.filename;
+    
 
     let { fullname, DOB, gender, salary, designation, image } = req.body;
 
@@ -184,7 +194,6 @@ const AddnewEmployee = async (req,res,next) => {
             gender : gender,
             salary : salary,
             designation : designation,
-            profilePicture : imagepath
         });
 
         if(!employee){
@@ -215,5 +224,6 @@ module.exports = {
     getAllEmployeeDetails : getAllEmployeeDetails,
     getEmployeeDetails : getEmployeeDetails,
     AddnewEmployee : AddnewEmployee,
-    updateEmployee : updateEmployee
+    updateEmployee : updateEmployee,
+    uploadEmployeeImage : uploadEmployeeImage
 }

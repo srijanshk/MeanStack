@@ -43,6 +43,8 @@ module.exports = function () {
             }
         );
 
+        require('./seed');
+
         // Set up routes
         routes.init(server);
     };
