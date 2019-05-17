@@ -27,8 +27,7 @@
    <br>
 
 
-   <div class = "box-photo"><img [src]="profilePicture" height="200" > </div>
-    <input placeholder="Photo" type="file" (change)="onSelectFile($event)"  formControlName="profilePicture">
+    <input placeholder="Photo" type="hidden" (change)="onSelectFile($event)"  formControlName="profilePicture">
    </div>
    <div class="column-2">
    

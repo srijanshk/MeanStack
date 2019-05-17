@@ -45,7 +45,7 @@ export class AddEmployeeComponent implements OnInit {
     this.submitted = true;
     this.formService.markFormGroupTouched(this.service.form);
     if (this.service.form.valid) {
-      if(!this.service.form.get('id').value)
+      if(!this.service.form.get('_id').value)
       {
        this.service.AddNewEmployee(this.service.form.value)
       .pipe(first())

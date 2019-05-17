@@ -9,9 +9,10 @@ import { JwtInterceptor, ErrorInterceptor } from '../helpers';
 import { ManageEmployeeComponent } from './manage-employee/manage-employee.component';
 import { EmployeeService } from '../services/employee.service';
 import { AddEmployeeComponent } from './add-employee/add-employee.component';
+import { ImportComponent } from './import/import.component';
 
 @NgModule({
-  declarations: [ManageEmployeeComponent, AddEmployeeComponent],
+  declarations: [ManageEmployeeComponent, AddEmployeeComponent, ImportComponent],
   imports: [
     CommonModule,
     HttpClientModule,

@@ -22,7 +22,6 @@ export class EmployeeService {
     gender: new FormControl(''),
     salary: new FormControl(''),
     designation: new FormControl(''),
-    profilePicture : new FormControl(''),
     created_at: new FormControl(null),
   });
 
@@ -34,7 +33,6 @@ export class EmployeeService {
       gender: '',
       salary: '',
       designation: '',
-      profilePicture: '',
       created_at: null,
     });
   }
@@ -54,6 +52,19 @@ export class EmployeeService {
   }
   getEmployee(userId) {
     return this.http.get(`${this.Url}/employee/${userId}`);
+  }
+
+  ImportEmployee(fileToUpload: File) {
+    const formData: FormData = new FormData();
+    formData.append('file', fileToUpload, fileToUpload.name);
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Accept': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      })
+    };
+    return this.http.post(`${this.Url}/employee/import`, formData, httpOptions);
   }
 
   AddNewEmployee(employee: Employee): Observable<Employee> {

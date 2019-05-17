@@ -6,6 +6,9 @@ import { EmployeeService } from 'src/app/services/employee.service';
 import { Employee } from 'src/app/models/employee-model';
 import { NotificationService } from 'src/app/services/notification.service';
 import { AddEmployeeComponent } from '../add-employee/add-employee.component';
+import { ImportComponent } from '../import/import.component';
+import { SelectionModel } from '@angular/cdk/collections';
+import { Angular5Csv } from 'angular5-csv/dist/Angular5-csv';
 
 @Component({
   selector: 'app-manage-employee',
@@ -16,10 +19,15 @@ export class ManageEmployeeComponent implements OnInit {
 
   public role: String;
   public usersource: any;
+  dataSource = new MatTableDataSource();
   public displayedColums;
   public pageSize: number = 10;
   public pageIndex: number = 0;
-
+  public datas: any;
+  selection = new SelectionModel(true, []);
+  selectedRows = [];
+  data : any;
+  renderedData: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -38,20 +46,45 @@ export class ManageEmployeeComponent implements OnInit {
   }
 
 
-  fetchEmployee(){
+  fetchEmployee() {
     this.service.getEmployees()
     .subscribe((data: Employee[])=> {
       this.usersource = new MatTableDataSource(data);
-      this.usersource.paginator = this.paginator;
-      this.usersource.sort = this.sort;
+      this.dataSource = this.usersource;
+      this.dataSource.connect().subscribe(d => this.renderedData = d);
+      this.data = Object.assign(this.usersource);
+      this.datas = this.usersource;
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     })
   }
 
-  applyFilter(filterValue: String) {
-    this.usersource.filter = filterValue.trim().toLowerCase();
 
-    if (this.usersource.paginator) {
-      this.usersource.paginator.firstPage();
+ 
+
+  isAllSelected() {
+
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  masterToggle() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
+        console.log(this.data);
+  }
+
+  selectRow(row) {
+    console.log(row)
+  }
+
+  applyFilter(filterValue: String) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
 
@@ -65,7 +98,7 @@ export class ManageEmployeeComponent implements OnInit {
   }
 
   isAdminTable() {
-    return this.displayedColums = ['checked', 'sn', 'fullname', 'DOB', 'salary', 'gender', 'designation', 'created_at', 'details', 'update']
+    return this.displayedColums = ['select', 'sn', 'fullname', 'DOB', 'salary', 'gender', 'designation', 'created_at', 'details', 'update']
   }
 
   isUserTable() {
@@ -77,10 +110,15 @@ export class ManageEmployeeComponent implements OnInit {
     this.pageSize = event.pageSize;
  }
 
- public redirectToDetails = (_id: string) => {
-}
-
-public redirectToUpdate = (_id: string) => {
+ onImport(){
+  const dialogConfig = new MatDialogConfig();
+  dialogConfig.disableClose = true;
+  dialogConfig.autoFocus = true;
+  dialogConfig.width = '60%';
+  this.dialog.open(ImportComponent,dialogConfig)
+  .afterClosed().subscribe(() => {
+    this.fetchEmployee();
+});
 }
 
 onCreate(){
@@ -96,6 +134,20 @@ onCreate(){
 }
 
 onEdit(id: string){
+  this.service.populateForm(id);
+    const dialogConfig = new MatDialogConfig();
+  dialogConfig.disableClose = true;
+  dialogConfig.autoFocus = true;
+  dialogConfig.width = "60%";
+  this.dialog.open(AddEmployeeComponent,dialogConfig)
+  .afterClosed().subscribe(() => {
+    this.fetchEmployee();
+});
+
+
+}
+
+onView(id: string){
   this.service.populateForm(id);
     const dialogConfig = new MatDialogConfig();
   dialogConfig.disableClose = true;
