@@ -14,10 +14,10 @@ To Login as Normal User
 
     username: "normaluser",
     
-    password: "normaluser"
+    password: "password"
     
 To Login as Admin
 
     username: "adminuser",
     
-    password: "adminuser",
+    password: "password",
