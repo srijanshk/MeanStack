@@ -21,3 +21,6 @@ To Login as Admin
     username: "adminuser",
     
     password: "password",
+
+
+When once the server is started comment out line no. 47 of server/server/config/app.js
