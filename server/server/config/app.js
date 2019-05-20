@@ -5,6 +5,7 @@ const expressValidator = require('express-validator');
 const log = require('morgan')
 const path = require('path')
 const cors = require('cors')
+const seed = require('./seed');
 
 module.exports = function () {
     let server = express(),
@@ -43,7 +44,7 @@ module.exports = function () {
             }
         );
 
-        require('./seed');
+        seed.seed();
 
         // Set up routes
         routes.init(server);
