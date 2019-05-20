@@ -77,6 +77,8 @@ export class ManageEmployeeComponent implements OnInit {
       data.push(temp);
       });
       this.excelService.exportAsExcelFile(data, 'employee')
+      this.selection.clear();
+
   }
 
 onExportPdf() {

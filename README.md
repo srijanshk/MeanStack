@@ -24,3 +24,7 @@ To Login as Admin
 
 
 When once the server is started comment out line no. 47 of server/server/config/app.js
+
+
+While Importing the Excel Sheet Header Format is 
+fullname | DOB | gender | salary | designation
