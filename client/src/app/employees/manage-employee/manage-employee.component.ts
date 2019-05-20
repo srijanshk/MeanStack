@@ -8,7 +8,10 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { AddEmployeeComponent } from '../add-employee/add-employee.component';
 import { ImportComponent } from '../import/import.component';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Angular5Csv } from 'angular5-csv/dist/Angular5-csv';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { ExcelService } from 'src/app/services/excel.service';
+
 
 @Component({
   selector: 'app-manage-employee',
@@ -19,15 +22,16 @@ export class ManageEmployeeComponent implements OnInit {
 
   public role: String;
   public usersource: any;
-  dataSource = new MatTableDataSource();
+  dataSource = new MatTableDataSource<Employee>();
   public displayedColums;
-  public pageSize: number = 10;
-  public pageIndex: number = 0;
-  public datas: any;
-  selection = new SelectionModel(true, []);
+  public pageSize = 10;
+  public pageIndex = 0;
+  selection = new SelectionModel<Employee>(true, []);
   selectedRows = [];
-  data : any;
-  renderedData: any;
+  selected = [];
+  isButtonEnable = true;
+  
+
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -36,8 +40,14 @@ export class ManageEmployeeComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     private service: EmployeeService,
-    private notificationService: NotificationService
-  ) { }
+    private notificationService: NotificationService,
+    private excelService: ExcelService
+  ) {
+    this.selection.changed.subscribe(item => {
+      this.isButtonEnable = this.selection.selected.length === 0;
+    });
+
+  }
 
   ngOnInit() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -48,19 +58,49 @@ export class ManageEmployeeComponent implements OnInit {
 
   fetchEmployee() {
     this.service.getEmployees()
-    .subscribe((data: Employee[])=> {
-      this.usersource = new MatTableDataSource(data);
+    .subscribe((data: Employee[]) => {
+      this.usersource = new MatTableDataSource<Employee>(data);
       this.dataSource = this.usersource;
-      this.dataSource.connect().subscribe(d => this.renderedData = d);
-      this.data = Object.assign(this.usersource);
-      this.datas = this.usersource;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    })
+    });
   }
 
+  onExportExcel() {
+    var data = [];
+    this.selection.selected.forEach(item => {
+      const index: number = this.dataSource.data.findIndex(d => d === item);
+      this.selected.push(this.dataSource.data[index]);
+        });
+      this.selected.forEach(d => {
+        var temp = [d.fullname, d.DOB, d.gender, d.salary, d.designation];
+      data.push(temp);
+      });
+      this.excelService.exportAsExcelFile(data, 'employee')
+  }
 
- 
+onExportPdf() {
+  var doc = new jsPDF();
+  var rows = [];
+
+
+  this.selection.selected.forEach(item => {
+const index: number = this.dataSource.data.findIndex(d => d === item);
+this.selectedRows.push(this.dataSource.data[index]);
+  });
+this.selectedRows.forEach(d => {
+  var temp = [d.fullname, d.DOB, d.gender, d.salary, d.designation];
+rows.push(temp);
+
+});
+doc.autoTable({
+  head: [['fullname', 'Date of Birth', 'Salary', 'Designation', 'Date Created']],
+  body :rows
+});
+   doc.save('test.pdf');
+
+}
+
 
   isAllSelected() {
 
@@ -70,15 +110,15 @@ export class ManageEmployeeComponent implements OnInit {
   }
 
   masterToggle() {
-    this.isAllSelected() ?
-        this.selection.clear() :
-        this.dataSource.data.forEach(row => this.selection.select(row));
-        console.log(this.data);
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      this.isButtonEnable = true;
+  } else {
+      this.dataSource.data.forEach(row => this.selection.select(row));
+      this.isButtonEnable = false;
+}
   }
 
-  selectRow(row) {
-    console.log(row)
-  }
 
   applyFilter(filterValue: String) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -98,48 +138,48 @@ export class ManageEmployeeComponent implements OnInit {
   }
 
   isAdminTable() {
-    return this.displayedColums = ['select', 'sn', 'fullname', 'DOB', 'salary', 'gender', 'designation', 'created_at', 'details', 'update']
+    return this.displayedColums = ['select', 'sn', 'fullname', 'DOB', 'salary', 'gender', 'designation', 'created_at', 'details', 'update'];
   }
 
   isUserTable() {
-    return this.displayedColums = ['sn', 'fullname', 'DOB', 'salary', 'gender', 'designation', 'created_at']
+    return this.displayedColums = ['sn', 'fullname', 'DOB', 'salary', 'gender', 'designation', 'created_at'];
   }
 
-  onPaginateChange(event){
+  onPaginateChange(event) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
  }
 
- onImport(){
+ onImport() {
   const dialogConfig = new MatDialogConfig();
   dialogConfig.disableClose = true;
   dialogConfig.autoFocus = true;
   dialogConfig.width = '60%';
-  this.dialog.open(ImportComponent,dialogConfig)
+  this.dialog.open(ImportComponent, dialogConfig)
   .afterClosed().subscribe(() => {
     this.fetchEmployee();
 });
 }
 
-onCreate(){
+onCreate() {
   this.service.initializeFormGroup();
   const dialogConfig = new MatDialogConfig();
   dialogConfig.disableClose = true;
   dialogConfig.autoFocus = true;
   dialogConfig.width = '60%';
-  this.dialog.open(AddEmployeeComponent,dialogConfig)
+  this.dialog.open(AddEmployeeComponent, dialogConfig)
   .afterClosed().subscribe(() => {
       this.fetchEmployee();
   });
 }
 
-onEdit(id: string){
+onEdit(id: string) {
   this.service.populateForm(id);
     const dialogConfig = new MatDialogConfig();
   dialogConfig.disableClose = true;
   dialogConfig.autoFocus = true;
-  dialogConfig.width = "60%";
-  this.dialog.open(AddEmployeeComponent,dialogConfig)
+  dialogConfig.width = '60%';
+  this.dialog.open(AddEmployeeComponent, dialogConfig)
   .afterClosed().subscribe(() => {
     this.fetchEmployee();
 });
@@ -147,13 +187,13 @@ onEdit(id: string){
 
 }
 
-onView(id: string){
+onView(id: string) {
   this.service.populateForm(id);
     const dialogConfig = new MatDialogConfig();
   dialogConfig.disableClose = true;
   dialogConfig.autoFocus = true;
-  dialogConfig.width = "60%";
-  this.dialog.open(AddEmployeeComponent,dialogConfig)
+  dialogConfig.width = '60%';
+  this.dialog.open(AddEmployeeComponent, dialogConfig)
   .afterClosed().subscribe(() => {
     this.fetchEmployee();
 });
@@ -161,3 +201,4 @@ onView(id: string){
 
 }
 }
+const ELEMENT_DATA: Employee[] = [];

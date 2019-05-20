@@ -93,7 +93,6 @@ export class AddEmployeeComponent implements OnInit {
   clearForm = function() {
     this.service.form.reset();
     this.service.initializeFormGroup();
-    this.notificationService.success(':: Submitted successfully');
   };
 
   onSelectFile(event:any){

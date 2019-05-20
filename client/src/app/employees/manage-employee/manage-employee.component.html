@@ -6,8 +6,11 @@
     <button mat-button (click) ="onImport()">
       <mat-icon>get_app</mat-icon>Import Employee
     </button>
-    <button mat-button >
-      <mat-icon>get_app</mat-icon>Export Employee
+    <button mat-button [disabled]="isButtonEnable" (click) ="onExportPdf()">
+      <mat-icon>receipt</mat-icon>Export As Pdf
+    </button>
+    <button mat-button [disabled]="isButtonEnable" (click) = "onExportExcel()">
+      <mat-icon>bar_chart</mat-icon>Export As Excel
     </button>
   </div>
   <mat-form-field>

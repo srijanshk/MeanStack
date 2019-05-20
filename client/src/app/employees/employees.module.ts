@@ -10,6 +10,7 @@ import { ManageEmployeeComponent } from './manage-employee/manage-employee.compo
 import { EmployeeService } from '../services/employee.service';
 import { AddEmployeeComponent } from './add-employee/add-employee.component';
 import { ImportComponent } from './import/import.component';
+import { ExcelService } from '../services/excel.service';
 
 @NgModule({
   declarations: [ManageEmployeeComponent, AddEmployeeComponent, ImportComponent],
@@ -25,7 +26,8 @@ import { ImportComponent } from './import/import.component';
     AuthenticationService,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
-    EmployeeService
+    EmployeeService,
+    ExcelService
   ]
 })
 export class EmployeesModule { }
