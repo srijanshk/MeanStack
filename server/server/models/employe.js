@@ -18,7 +18,10 @@ var Employee = new Schema({
     designation: {
         type: String,
     },
-    profilePicture: String,
+    profilePicture: {
+        type: String,
+        default: null
+    },
     created_at: {
         type: Date,
         default: Date.now

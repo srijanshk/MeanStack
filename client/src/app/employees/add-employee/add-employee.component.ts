@@ -2,9 +2,10 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormServices } from 'src/app/services/form';
 import { MatSnackBar, MatDialogRef } from '@angular/material';
 import { Router } from '@angular/router';
-import { EmployeeService } from 'src/app/services/employee.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { first } from 'rxjs/operators';
+import { EmployeeService } from 'src/app/services/employee.service';
+
 
 @Component({
   selector: 'app-add-employee',
@@ -12,6 +13,9 @@ import { first } from 'rxjs/operators';
   styleUrls: ['./add-employee.component.css']
 })
 export class AddEmployeeComponent implements OnInit {
+
+
+ 
 
   public loading = false;
   public submitted = false;
@@ -22,8 +26,11 @@ export class AddEmployeeComponent implements OnInit {
     salary: '',
     designation: '',
   };
-  public profilePicture: any='';
-  public picture: any='';
+  public profilePicture: any = this.service.form.value.profilePicture;
+  public photo: any = '';
+  public picture: any = '';
+  fileToUpload: File = null;
+
 
 
   constructor(
@@ -36,7 +43,6 @@ export class AddEmployeeComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
   ) { }
 
-  public EmployeeForm: FormGroup;
 
   ngOnInit() {
   }
@@ -47,7 +53,19 @@ export class AddEmployeeComponent implements OnInit {
     if (this.service.form.valid) {
       if(!this.service.form.get('_id').value)
       {
-       this.service.AddNewEmployee(this.service.form.value)
+         const fullname = this.service.form.value.fullname;
+         const gender = this.service.form.value.gender;
+         const DOB = this.service.form.value.DOB;
+         const salary = this.service.form.value.salary;
+         const designation = this.service.form.value.designation;
+        const formData: FormData = new FormData();
+        formData.append('fullname', fullname);
+        formData.append('DOB', DOB);
+        formData.append('salary', salary);
+        formData.append('gender', gender);
+        formData.append('designation', designation);
+        formData.append('image', this.fileToUpload, this.fileToUpload.name);
+       this.service.AddNewEmployee(formData)
       .pipe(first())
       .subscribe(
         data => {
@@ -63,7 +81,19 @@ export class AddEmployeeComponent implements OnInit {
         },
       );
       } else{
-        this.service.EditEmployee(this.service.form.get('_id').value, this.service.form.value)
+        const fullname = this.service.form.value.fullname;
+        const gender = this.service.form.value.gender;
+        const DOB = this.service.form.value.DOB;
+        const salary = this.service.form.value.salary;
+        const designation = this.service.form.value.designation;
+       const formData: FormData = new FormData();
+       formData.append('fullname', fullname);
+       formData.append('DOB', DOB);
+       formData.append('salary', salary);
+       formData.append('gender', gender);
+       formData.append('designation', designation);
+       formData.append('image', this.fileToUpload, this.fileToUpload.name);
+        this.service.EditEmployee(this.service.form.get('_id').value, formData)
         .pipe(first())
         .subscribe(
           data => {
@@ -79,12 +109,17 @@ export class AddEmployeeComponent implements OnInit {
           },
         );
       }
-      this.closeDialog();
     } 
     else {
       this.formErrors = this.formService.validateForm(this.service.form, this.formErrors, false);
     }
+    this.closeDialog();
   }
+
+  handleFileInput(files: FileList) {
+    this.fileToUpload = files.item(0);
+    console.log(this.fileToUpload)
+}
 
   closeDialog = function() {
     this.dialogRef.close();
@@ -95,15 +130,18 @@ export class AddEmployeeComponent implements OnInit {
     this.service.initializeFormGroup();
   };
 
-  onSelectFile(event:any){
+
+  onSelectFile(event){
     if (event.target.files && event.target.files[0]) {
       var reader = new FileReader();
       reader.onload =(event: ProgressEvent) =>{
-        this.profilePicture = (<FileReader>event.target).result;
+        this.photo = (<FileReader>event.target).result;
       }
       reader.readAsDataURL(event.target.files[0]);
-      this.profilePicture = event.target.files;
+      this.photo = event.target.files;
+      this.picture = this.photo;
     }
+    this.handleFileInput(this.picture);
 }
 
 

@@ -10,8 +10,7 @@ const imageupload = require('../../../middlewares/imageuploadmiddleware');
 router.post('/import', sheetimport.single('file'), EmployeeService.importsheet)
 router.get('/', authClientRequest.authClientToken ,EmployeeService.getAllEmployeeDetails);
 router.get('/:userId', authClientRequest.authClientToken ,EmployeeService.getEmployeeDetails);
-router.post('/', authClientRequest.authClientToken ,EmployeeService.AddnewEmployee);
-router.put('/:userId',  authClientRequest.authClientToken ,EmployeeService.updateEmployee);
-router.put('/image/:userId', imageupload.single('image'), authClientRequest.authClientToken ,EmployeeService.uploadEmployeeImage);
+router.post('/', imageupload.single('image'), authClientRequest.authClientToken ,EmployeeService.AddnewEmployee);
+router.put('/:userId', imageupload.single('image'),  authClientRequest.authClientToken ,EmployeeService.updateEmployee);
 
 module.exports = router;

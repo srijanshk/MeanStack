@@ -121,6 +121,12 @@ const getEmployeeDetails = async (req,res, next) => {
 
 
 const updateEmployee = async (req,res, next) => {
+    if (!req.file) {
+        res.json({ error_code: 1, err_desc: "No file passed" });
+        return;
+      }
+    var url = req.protocol + '://' + req.get("host");
+    var imagepath = url + "/uploads/" + req.file.filename;
 
     let { userId } = req.params;
 
@@ -133,6 +139,8 @@ const updateEmployee = async (req,res, next) => {
             gender : gender,
             salary : salary,
             designation : designation,
+            profilePicture : imagepath
+
         });
         if(!employee){
             throw new error();
@@ -154,30 +162,16 @@ const updateEmployee = async (req,res, next) => {
         );
     }
 }
-const uploadEmployeeImage = async  (req,res, next) => {
+
+const AddnewEmployee = async (req,res,next) => {
+    const errors = validationResult(req);
     if (!req.file) {
         res.json({ error_code: 1, err_desc: "No file passed" });
         return;
       }
     var url = req.protocol + '://' + req.get("host");
     var imagepath = url + "/uploads/" + req.file.filename;
-    let { userId } = req.params;
 
-    try{
-        let image = await employeeModel.findOneAndUpdate( userId, {
-            profilePicture : imagepath
-        });
-
-        if(!image){
-            throw new error();
-        }
-    }catch(error){
-        console.log(error);
-    }
-
-}
-const AddnewEmployee = async (req,res,next) => {
-    const errors = validationResult(req);
 
     if(!errors.isEmpty()){
         return res.status(422).json({ errors: errors.array() });
@@ -194,6 +188,8 @@ const AddnewEmployee = async (req,res,next) => {
             gender : gender,
             salary : salary,
             designation : designation,
+            profilePicture : imagepath
+
         });
 
         if(!employee){
@@ -225,5 +221,4 @@ module.exports = {
     getEmployeeDetails : getEmployeeDetails,
     AddnewEmployee : AddnewEmployee,
     updateEmployee : updateEmployee,
-    uploadEmployeeImage : uploadEmployeeImage
 }

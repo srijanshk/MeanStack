@@ -22,6 +22,7 @@ export class EmployeeService {
     gender: new FormControl(''),
     salary: new FormControl(''),
     designation: new FormControl(''),
+    profilePicture: new FormControl(''),
     created_at: new FormControl(null),
   });
 
@@ -33,6 +34,7 @@ export class EmployeeService {
       gender: '',
       salary: '',
       designation: '',
+      profilePicture: null,
       created_at: null,
     });
   }
@@ -57,6 +59,8 @@ export class EmployeeService {
   ImportEmployee(fileToUpload: File) {
     const formData: FormData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
+
+    console.log(formData)
 
     const httpOptions = {
       headers: new HttpHeaders({

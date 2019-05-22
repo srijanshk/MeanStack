@@ -30,7 +30,8 @@ export class ManageEmployeeComponent implements OnInit {
   selectedRows = [];
   selected = [];
   isButtonEnable = true;
-  
+  private mode = "create";
+
 
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -177,7 +178,7 @@ onCreate() {
 
 onEdit(id: string) {
   this.service.populateForm(id);
-    const dialogConfig = new MatDialogConfig();
+  const dialogConfig = new MatDialogConfig();
   dialogConfig.disableClose = true;
   dialogConfig.autoFocus = true;
   dialogConfig.width = '60%';
@@ -185,6 +186,7 @@ onEdit(id: string) {
   .afterClosed().subscribe(() => {
     this.fetchEmployee();
 });
+this.selection.clear();
 
 
 }
@@ -199,6 +201,7 @@ onView(id: string) {
   .afterClosed().subscribe(() => {
     this.fetchEmployee();
 });
+this.selection.clear();
 
 
 }
