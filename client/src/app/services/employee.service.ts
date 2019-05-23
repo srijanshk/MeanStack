@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { Employee } from '../models/employee-model';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -39,11 +39,11 @@ export class EmployeeService {
     });
   }
 
-  constructor( private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
   private generateHeaders() {
     return {
-      headers: new HttpHeaders({'Content-Type': 'application/json'})
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
   }
 
@@ -71,15 +71,15 @@ export class EmployeeService {
     return this.http.post(`${this.Url}/employee/import`, formData, httpOptions);
   }
 
-  AddNewEmployee(employee: Employee): Observable<Employee> {
-    return this.http.post<Employee>(`${this.Url}/employee/`, employee);
+  AddNewEmployee(data) {
+    return this.http.post(`${this.Url}/employee/`, data);
   }
 
-  EditEmployee(userId , employee: Employee) {
-    return this.http.put<Employee>(`${this.Url}/employee/${userId}`, employee);
+  EditEmployee(userId, data) {
+    return this.http.put(`${this.Url}/employee/${userId}`, data);
   }
 
-  populateForm(employee){
+  populateForm(employee) {
     this.form.setValue(_.omit(employee, ''));
   }
 }

@@ -16,7 +16,7 @@ const importsheet = (req,res, next) => {
   try {
       /** Multer gives us file info in req.file object */
       if (!req.file) {
-        res.json({ error_code: 1, err_desc: "No file passed" });
+        res.status(400).json({ error_code: 1, err_desc: "No file passed" });
         return;
       }
 
@@ -122,7 +122,7 @@ const getEmployeeDetails = async (req,res, next) => {
 
 const updateEmployee = async (req,res, next) => {
     if (!req.file) {
-        res.json({ error_code: 1, err_desc: "No file passed" });
+        res.status(400).json({ error_code: 1, err_desc: "No file passed" });
         return;
       }
     var url = req.protocol + '://' + req.get("host");
@@ -166,7 +166,7 @@ const updateEmployee = async (req,res, next) => {
 const AddnewEmployee = async (req,res,next) => {
     const errors = validationResult(req);
     if (!req.file) {
-        res.json({ error_code: 1, err_desc: "No file passed" });
+        res.status(404).json({ error_code: 1, err_desc: "No Image file passed" });
         return;
       }
     var url = req.protocol + '://' + req.get("host");

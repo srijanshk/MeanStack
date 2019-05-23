@@ -1,16 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatPaginator, MatTableDataSource, MatDialog, MatDialogConfig } from '@angular/material';
-import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Router } from '@angular/router';
-import { EmployeeService } from 'src/app/services/employee.service';
-import { Employee } from 'src/app/models/employee-model';
-import { NotificationService } from 'src/app/services/notification.service';
+import { EmployeeService } from '../../services/employee.service';
+import { Employee } from '../../models/employee-model';
+import { NotificationService } from '../../services/notification.service';
 import { AddEmployeeComponent } from '../add-employee/add-employee.component';
 import { ImportComponent } from '../import/import.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import { ExcelService } from 'src/app/services/excel.service';
+import { ExcelService } from '../../services/excel.service';
 
 
 @Component({
@@ -59,12 +58,12 @@ export class ManageEmployeeComponent implements OnInit {
 
   fetchEmployee() {
     this.service.getEmployees()
-    .subscribe((data: Employee[]) => {
-      this.usersource = new MatTableDataSource<Employee>(data);
-      this.dataSource = this.usersource;
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
+      .subscribe((data: Employee[]) => {
+        this.usersource = new MatTableDataSource<Employee>(data);
+        this.dataSource = this.usersource;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      });
   }
 
   onExportExcel() {
@@ -72,37 +71,37 @@ export class ManageEmployeeComponent implements OnInit {
     this.selection.selected.forEach(item => {
       const index: number = this.dataSource.data.findIndex(d => d === item);
       this.selected.push(this.dataSource.data[index]);
-        });
-      this.selected.forEach(d => {
-        var temp = [d.fullname, d.DOB, d.gender, d.salary, d.designation];
+    });
+    this.selected.forEach(d => {
+      var temp = [d.fullname, d.DOB, d.gender, d.salary, d.designation];
       data.push(temp);
-      });
-      this.excelService.exportAsExcelFile(data, 'employee')
-      this.selection.clear();
+    });
+    this.excelService.exportAsExcelFile(data, 'employee')
+    this.selection.clear();
 
   }
 
-onExportPdf() {
-  var doc = new jsPDF();
-  var rows = [];
+  onExportPdf() {
+    var doc = new jsPDF();
+    var rows = [];
 
 
-  this.selection.selected.forEach(item => {
-const index: number = this.dataSource.data.findIndex(d => d === item);
-this.selectedRows.push(this.dataSource.data[index]);
-  });
-this.selectedRows.forEach(d => {
-  var temp = [d.fullname, d.DOB, d.gender, d.salary, d.designation];
-rows.push(temp);
+    this.selection.selected.forEach(item => {
+      const index: number = this.dataSource.data.findIndex(d => d === item);
+      this.selectedRows.push(this.dataSource.data[index]);
+    });
+    this.selectedRows.forEach(d => {
+      var temp = [d.fullname, d.DOB, d.gender, d.salary, d.designation];
+      rows.push(temp);
 
-});
-doc.autoTable({
-  head: [['fullname', 'Date of Birth', 'Salary', 'Designation', 'Date Created']],
-  body :rows
-});
-   doc.save('test.pdf');
+    });
+    doc.autoTable({
+      head: [['fullname', 'Date of Birth', 'Salary', 'Designation', 'Date Created']],
+      body: rows
+    });
+    doc.save('test.pdf');
 
-}
+  }
 
 
   isAllSelected() {
@@ -116,10 +115,10 @@ doc.autoTable({
     if (this.isAllSelected()) {
       this.selection.clear();
       this.isButtonEnable = true;
-  } else {
+    } else {
       this.dataSource.data.forEach(row => this.selection.select(row));
       this.isButtonEnable = false;
-}
+    }
   }
 
 
@@ -151,59 +150,65 @@ doc.autoTable({
   onPaginateChange(event) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
- }
+  }
 
- onImport() {
-  const dialogConfig = new MatDialogConfig();
-  dialogConfig.disableClose = true;
-  dialogConfig.autoFocus = true;
-  dialogConfig.width = '60%';
-  this.dialog.open(ImportComponent, dialogConfig)
-  .afterClosed().subscribe(() => {
-    this.fetchEmployee();
-});
-}
-
-onCreate() {
-  this.service.initializeFormGroup();
-  const dialogConfig = new MatDialogConfig();
-  dialogConfig.disableClose = true;
-  dialogConfig.autoFocus = true;
-  dialogConfig.width = '60%';
-  this.dialog.open(AddEmployeeComponent, dialogConfig)
-  .afterClosed().subscribe(() => {
-      this.fetchEmployee();
-  });
-}
-
-onEdit(id: string) {
-  this.service.populateForm(id);
-  const dialogConfig = new MatDialogConfig();
-  dialogConfig.disableClose = true;
-  dialogConfig.autoFocus = true;
-  dialogConfig.width = '60%';
-  this.dialog.open(AddEmployeeComponent, dialogConfig)
-  .afterClosed().subscribe(() => {
-    this.fetchEmployee();
-});
-this.selection.clear();
-
-
-}
-
-onView(id: string) {
-  this.service.populateForm(id);
+  onImport() {
     const dialogConfig = new MatDialogConfig();
-  dialogConfig.disableClose = true;
-  dialogConfig.autoFocus = true;
-  dialogConfig.width = '60%';
-  this.dialog.open(AddEmployeeComponent, dialogConfig)
-  .afterClosed().subscribe(() => {
-    this.fetchEmployee();
-});
-this.selection.clear();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '60%';
+    this.dialog.open(ImportComponent, dialogConfig)
+      .afterClosed().subscribe(() => {
+        this.fetchEmployee();
+      });
+  }
+
+  onCreate(mode) {
+    this.service.initializeFormGroup();
+    mode = 'onAdd';
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '60%';
+    dialogConfig.data = mode;
+    this.dialog.open(AddEmployeeComponent, dialogConfig)
+      .afterClosed().subscribe(() => {
+        this.fetchEmployee();
+      });
+  }
+
+  onEdit(id: string, mode) {
+    this.service.populateForm(id);
+    mode = 'onedit';
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '60%';
+    dialogConfig.data = mode;
+    this.dialog.open(AddEmployeeComponent, dialogConfig)
+      .afterClosed().subscribe(() => {
+        this.fetchEmployee();
+      });
+    this.selection.clear();
 
 
-}
+  }
+
+  onView(id: string, mode) {
+    this.service.populateForm(id);
+    mode = 'onview';
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '60%';
+    dialogConfig.data = mode;
+    this.dialog.open(AddEmployeeComponent, dialogConfig)
+      .afterClosed().subscribe(() => {
+        this.fetchEmployee();
+      });
+    this.selection.clear();
+
+
+  }
 }
 const ELEMENT_DATA: Employee[] = [];

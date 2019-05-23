@@ -1,5 +1,5 @@
 <mat-card class="mat-elevation-z8">
-  <mat-icon class="close" (click)="closeDialog()" >close</mat-icon>
+<mat-icon class="close" (click)="closeDialog()" >close</mat-icon>
 <section class="mat-typography">
       <h2>Employee</h2>
     </section>
@@ -27,12 +27,12 @@
    <br>
 
 <label class="hoverable" for="fileInput">
- <img [src]="photo? photo : profilePicture">
+ <img [src]="photo ? photo : profilePicture">
   <div class="hover-text">Choose file</div>
   <div class="background"></div>
 </label>
 <br/>
-<input id="fileInput" type='file' (change)="onSelectFile($event)">
+<input id="fileInput" type='file' accept="image/*" (change)="onSelectFile($event)">
    
    </div>
    <div class="column-2">
@@ -57,10 +57,10 @@
    </div>
    </div>
 
-<div>
+<div *ngIf="mode === 'onAdd' || mode === 'onedit'">
       <button mat-raised-button type="submit" >Submit</button> 
-       <button mat-raised-button (click) ="clearForm()" >Clear</button>
-      <button mat-raised-button   (click)="closeDialog()" >Cancel</button>
+       <!-- <button mat-raised-button (click) ="clearForm()" >Clear</button>
+      <button mat-raised-button   (click)="closeDialog()" >Cancel</button> -->
 </div>
   </form>
 

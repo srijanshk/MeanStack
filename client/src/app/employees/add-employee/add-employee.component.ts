@@ -1,10 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormServices } from 'src/app/services/form';
-import { MatSnackBar, MatDialogRef } from '@angular/material';
+import { Component, OnInit, ChangeDetectorRef, Inject } from '@angular/core';
+import { FormServices } from '../../services/form';
+import { MatSnackBar, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { first } from 'rxjs/operators';
-import { EmployeeService } from 'src/app/services/employee.service';
+import { EmployeeService } from '../../services/employee.service';
 
 
 @Component({
@@ -15,12 +15,10 @@ import { EmployeeService } from 'src/app/services/employee.service';
 export class AddEmployeeComponent implements OnInit {
 
 
- 
-
   public loading = false;
   public submitted = false;
   formErrors = {
-    fullname : '',
+    fullname: '',
     DOB: '',
     gender: '',
     salary: '',
@@ -29,7 +27,8 @@ export class AddEmployeeComponent implements OnInit {
   public profilePicture: any = this.service.form.value.profilePicture;
   public photo: any = '';
   public picture: any = '';
-  fileToUpload: File = null;
+  fileToUpload: File = '';
+  modes: any;
 
 
 
@@ -40,8 +39,12 @@ export class AddEmployeeComponent implements OnInit {
     private router: Router,
     private service: EmployeeService,
     private dialogRef: MatDialogRef<AddEmployeeComponent>,
+    @Inject(MAT_DIALOG_DATA) public mode: any,
     private changeDetectorRef: ChangeDetectorRef,
-  ) { }
+  ) {
+    this.modes = this.mode;
+    console.log(this.modes);
+   }
 
 
   ngOnInit() {
@@ -51,13 +54,12 @@ export class AddEmployeeComponent implements OnInit {
     this.submitted = true;
     this.formService.markFormGroupTouched(this.service.form);
     if (this.service.form.valid) {
-      if(!this.service.form.get('_id').value)
-      {
-         const fullname = this.service.form.value.fullname;
-         const gender = this.service.form.value.gender;
-         const DOB = this.service.form.value.DOB;
-         const salary = this.service.form.value.salary;
-         const designation = this.service.form.value.designation;
+      if (!this.service.form.get('_id').value) {
+        const fullname = this.service.form.value.fullname;
+        const gender = this.service.form.value.gender;
+        const DOB = this.service.form.value.DOB;
+        const salary = this.service.form.value.salary;
+        const designation = this.service.form.value.designation;
         const formData: FormData = new FormData();
         formData.append('fullname', fullname);
         formData.append('DOB', DOB);
@@ -65,52 +67,51 @@ export class AddEmployeeComponent implements OnInit {
         formData.append('gender', gender);
         formData.append('designation', designation);
         formData.append('image', this.fileToUpload, this.fileToUpload.name);
-       this.service.AddNewEmployee(formData)
-      .pipe(first())
-      .subscribe(
-        data => {
-          this.snackbar.open('Employee has been Added', 'Close', {
-            duration: 3000,
-          });
-        },
-        error => {
-          this.loading = false;
-          this.snackbar.open('Unsuccessful', 'Close', {
-            duration: 3000,
-          });
-        },
-      );
-      } else{
+        this.service.AddNewEmployee(formData)
+          .pipe(first())
+          .subscribe(
+            data => {
+              this.snackbar.open('Employee has been Added', 'Close', {
+                duration: 3000,
+              });
+            },
+            error => {
+              this.loading = false;
+              this.snackbar.open('Unsuccessful', 'Close', {
+                duration: 3000,
+              });
+            },
+          );
+      } else {
         const fullname = this.service.form.value.fullname;
         const gender = this.service.form.value.gender;
         const DOB = this.service.form.value.DOB;
         const salary = this.service.form.value.salary;
         const designation = this.service.form.value.designation;
-       const formData: FormData = new FormData();
-       formData.append('fullname', fullname);
-       formData.append('DOB', DOB);
-       formData.append('salary', salary);
-       formData.append('gender', gender);
-       formData.append('designation', designation);
-       formData.append('image', this.fileToUpload, this.fileToUpload.name);
+        const formData: FormData = new FormData();
+        formData.append('fullname', fullname);
+        formData.append('DOB', DOB);
+        formData.append('salary', salary);
+        formData.append('gender', gender);
+        formData.append('designation', designation);
+        formData.append('image', this.fileToUpload, this.fileToUpload.name);
         this.service.EditEmployee(this.service.form.get('_id').value, formData)
-        .pipe(first())
-        .subscribe(
-          data => {
-            this.snackbar.open('Employee has been Updated', 'Close', {
-              duration: 3000,
-            });
-          },
-          error => {
-            this.loading = false;
-            this.snackbar.open('Unsuccessful', 'Close', {
-              duration: 3000,
-            });
-          },
-        );
+          .pipe(first())
+          .subscribe(
+            data => {
+              this.snackbar.open('Employee has been Updated', 'Close', {
+                duration: 3000,
+              });
+            },
+            error => {
+              this.loading = false;
+              this.snackbar.open('Unsuccessful', 'Close', {
+                duration: 3000,
+              });
+            },
+          )
       }
-    } 
-    else {
+    } else {
       this.formErrors = this.formService.validateForm(this.service.form, this.formErrors, false);
     }
     this.closeDialog();
@@ -118,23 +119,23 @@ export class AddEmployeeComponent implements OnInit {
 
   handleFileInput(files: FileList) {
     this.fileToUpload = files.item(0);
-    console.log(this.fileToUpload)
-}
+    console.log(this.fileToUpload.size)
+  }
 
-  closeDialog = function() {
+  closeDialog = function () {
     this.dialogRef.close();
   };
 
-  clearForm = function() {
+  clearForm = function () {
     this.service.form.reset();
     this.service.initializeFormGroup();
   };
 
 
-  onSelectFile(event){
+  onSelectFile(event) {
     if (event.target.files && event.target.files[0]) {
       var reader = new FileReader();
-      reader.onload =(event: ProgressEvent) =>{
+      reader.onload = (event: ProgressEvent) => {
         this.photo = (<FileReader>event.target).result;
       }
       reader.readAsDataURL(event.target.files[0]);
@@ -142,7 +143,7 @@ export class AddEmployeeComponent implements OnInit {
       this.picture = this.photo;
     }
     this.handleFileInput(this.picture);
-}
+  }
 
 
 

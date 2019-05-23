@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, ElementRef } from '@angular/core';
-import { EmployeeService } from 'src/app/services/employee.service';
+import { EmployeeService } from '../../services/employee.service';
 import { MatDialogRef, MatSnackBar } from '@angular/material';
 
 @Component({
@@ -9,7 +9,7 @@ import { MatDialogRef, MatSnackBar } from '@angular/material';
 })
 export class ImportComponent implements OnInit {
 
- 
+
   public loading = false;
 
   fileToUpload: File = null;
@@ -26,25 +26,26 @@ export class ImportComponent implements OnInit {
 
   handleFileInput(files: FileList) {
     this.fileToUpload = files.item(0);
-}
+  }
 
-upload() {
-  this.service.ImportEmployee(this.fileToUpload)
-  .subscribe(data => {
-    this.snackbar.open('Imported Successfully', 'Close', {
-      duration: 3000,
-    });
-  }, error => {
-    this.loading = false;
-    this.snackbar.open('Unsuccessful', 'Close', {
-      duration: 3000,
-    });  })
+  upload() {
+    this.service.ImportEmployee(this.fileToUpload)
+      .subscribe(data => {
+        this.snackbar.open('Imported Successfully', 'Close', {
+          duration: 3000,
+        });
+      }, error => {
+        this.loading = false;
+        this.snackbar.open('Unsuccessful', 'Close', {
+          duration: 3000,
+        });
+      })
     this.closeDialog();
 
-}
-closeDialog = function() {
-  this.dialogRef.close();
-};
+  }
+  closeDialog = function () {
+    this.dialogRef.close();
+  };
 
 }
 
