@@ -96,10 +96,11 @@ export class ManageEmployeeComponent implements OnInit {
 
     });
     doc.autoTable({
-      head: [['fullname', 'Date of Birth', 'Salary', 'Designation', 'Date Created']],
+      head: [['fullname', 'Date of Birth', 'Gender', 'Salary', 'Designation']],
       body: rows
     });
     doc.save('test.pdf');
+    this.selection.clear();
 
   }
 

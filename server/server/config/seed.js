@@ -5,7 +5,7 @@ const password = 'password';
 
 const seed = async () => {
 
-    let hashedPassword = await bcrypt.hash("password", 8);
+    let hashedPassword = await bcrypt.hash("1234567890", 8);
     var user1 = {
         username: "adminuser",
         password: hashedPassword,
