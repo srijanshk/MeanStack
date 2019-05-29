@@ -28,11 +28,11 @@
 
 <label class="hoverable" for="fileInput">
  <img [src]="photo ? photo : profilePicture">
-  <div class="hover-text">Choose file</div>
-  <div class="background"></div>
+  <div class="hover-text" *ngIf="mode === 'onAdd' || mode === 'onedit'">Choose file</div>
+  <div class="background" *ngIf="mode === 'onAdd' || mode === 'onedit'"></div>
 </label>
 <br/>
-<input id="fileInput" type='file' accept="image/*" (change)="onSelectFile($event)">
+<input *ngIf="mode === 'onAdd' || mode === 'onedit'" id="fileInput" type='file' accept="image/*" (change)="onSelectFile($event)">
    
    </div>
    <div class="column-2">

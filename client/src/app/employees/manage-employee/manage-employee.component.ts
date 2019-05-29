@@ -161,7 +161,7 @@ export class ManageEmployeeComponent implements OnInit {
     this.dialog.open(ImportComponent, dialogConfig)
       .afterClosed().subscribe(() => {
         this.fetchEmployee();
-      });
+    });
   }
 
   onCreate(mode) {
@@ -189,8 +189,8 @@ export class ManageEmployeeComponent implements OnInit {
     this.dialog.open(AddEmployeeComponent, dialogConfig)
       .afterClosed().subscribe(() => {
         this.fetchEmployee();
+        this.selection.clear();
       });
-    this.selection.clear();
 
 
   }
@@ -206,8 +206,9 @@ export class ManageEmployeeComponent implements OnInit {
     this.dialog.open(AddEmployeeComponent, dialogConfig)
       .afterClosed().subscribe(() => {
         this.fetchEmployee();
+        this.selection.clear();
+
       });
-    this.selection.clear();
 
 
   }
