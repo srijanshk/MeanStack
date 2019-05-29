@@ -1,19 +1,27 @@
-
-
 <mat-card class="mat-elevation-z8">
-<mat-icon class="close" (click)="closeDialog()" >close</mat-icon>
-<section class="mat-typography">
-      <h2>Bulk Import</h2>
-    </section>
+  <mat-icon class="close" (click)="closeDialog()">close</mat-icon>
+  <section class="mat-typography">
+    <h2>Bulk Import</h2>
+  </section>
 
-    <div class="form-group">
-    <input type="file"
-           id="file"
-           accept = '.xlsx, .csv'
-           (change)="handleFileInput($event.target.files)">
-            <button mat-raised-button color="primary" type="button" (click)="upload()" >Upload</button>
-</div>
-</mat-card> 
+  <div class="form-group">
+    <button type="button" mat-raised-button (click)="fileInput.click()">
+      Choose File
+    </button>
 
- 
-
+    <input
+      type="file"
+      hidden
+      id="file"
+      accept=".xlsx, .csv"
+      #fileInput
+      (change)="handleFileInput($event.target.files)"
+    />
+    <mat-form-field>
+        <input matInput id="textinput" type="text" readonly value="{{fileToUpload.name}}">
+      </mat-form-field>
+    <button mat-raised-button color="primary" type="button" (click)="upload()">
+      Upload
+    </button>
+  </div>
+</mat-card>
