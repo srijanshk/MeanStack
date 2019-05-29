@@ -16,6 +16,18 @@ const seed = async () => {
         password: hashedPassword,
         role: "user"
     }
+
+    User.remove({username: "adminuser"},function(e){
+        if (e) {
+            throw e;
+        }
+    })
+    
+    User.remove({username: "normaluser"},function(e){
+        if (e) {
+            throw e;
+        }
+    })
     
     User.create(user1, function(e){
         if (e) {

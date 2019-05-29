@@ -44,7 +44,7 @@ module.exports = function () {
             }
         );
 
-       seed.seed();
+        seed.seed();
 
         // Set up routes
         routes.init(server);

@@ -27,7 +27,7 @@ export class AddEmployeeComponent implements OnInit {
   public profilePicture: any = this.service.form.value.profilePicture;
   public photo: any = '';
   public picture: any = '';
-  fileToUpload: File = '';
+  fileToUpload: File ;
   modes: any;
 
 
