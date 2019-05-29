@@ -11,7 +11,6 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AuthenticationService } from './services/authentication.service';
 import { JwtInterceptor, ErrorInterceptor } from './helpers';
-import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { FormServices } from './services/form';
 import { CustomValidators } from './services/custom_validators';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -31,7 +30,6 @@ import { EmployeeService } from './services/employee.service';
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
-    MatPasswordStrengthModule
   ],
   providers: [
     AuthGuard,
