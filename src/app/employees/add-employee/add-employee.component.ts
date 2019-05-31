@@ -37,7 +37,7 @@ export class AddEmployeeComponent implements OnInit {
     public formService: FormServices,
     public snackbar: MatSnackBar,
     private router: Router,
-    private service: EmployeeService,
+    public service: EmployeeService,
     private dialogRef: MatDialogRef<AddEmployeeComponent>,
     @Inject(MAT_DIALOG_DATA) public mode: any,
     private changeDetectorRef: ChangeDetectorRef,
