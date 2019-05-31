@@ -36,8 +36,7 @@ module.exports = function () {
         server.use(log('combined'));
 
         //connect the database
-        mongoose.connect(
-            db.database,
+        mongoose.connect( process.env.MONGODB_URI || db.database,
             { 
                 useNewUrlParser: true,
                 useCreateIndex: true
