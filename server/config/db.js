@@ -1,3 +1,4 @@
 module.exports = {
-    'database': 'mongodb://localhost:27017/MeanStack'
+    'database': 'mongodb+srv://user:p@sswo123@meanstack-j5ema.mongodb.net/meanstack'
+
 }
