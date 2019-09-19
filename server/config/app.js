@@ -45,6 +45,10 @@ module.exports = function () {
 
         seed.seed();
 
+        // Create link to Angular build directory
+        var distDir = __dirname + "/dist/";
+        server.use(express.static(distDir));
+
         // Set up routes
         routes.init(server);
     };

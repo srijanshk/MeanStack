@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "serve": "nodemon server/server.js",
-    "start": "concurrently \"nodemon server/server.js\" \"ng serve\"",
+    "start": "node server/server.js",
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
@@ -19,13 +18,11 @@
   "dependencies": {
     "@angular/animations": "^7.0.4",
     "@angular/cdk": "^7.3.7",
-    "@angular/cli": "^7.0.7",
+    "@angular/cli": "^7.3.9",
     "@angular/common": "~7.0.0",
     "@angular/compiler": "~7.0.0",
-    "@angular/compiler-cli": "^7.0.4",
+    "@angular/compiler-cli": "^7.2.15",
     "@angular/core": "~7.0.0",
-    "@angular-devkit/build-angular": "~0.10.0",
-    "@angular/language-service": "~7.0.0",
     "@angular/forms": "~7.0.0",
     "@angular/http": "~7.0.0",
     "@angular/material": "^7.3.7",
@@ -64,6 +61,8 @@
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "~0.10.0",
+    "@angular/language-service": "~7.0.0",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
