@@ -1,8 +1,6 @@
 var User = require('../models/user');
 const bcrypt = require('bcryptjs');
 
-const password = 'password';
-
 const seed = async () => {
 
     let hashedPassword = await bcrypt.hash("1234567890", 8);
@@ -39,6 +37,7 @@ const seed = async () => {
             throw e;
         }
     });
+    console.log('seeded')
 }
 
 
