@@ -55,10 +55,9 @@ module.exports = function () {
 
     
     start = () => {
-        let hostname = server.get('hostname'),
-            port = server.get('port');
-        server.listen(port, function () {
-            console.log('Express server listening on - http://' + hostname + ':' + port);
+        var servers = server.listen(process.env.PORT || 8080, function () {
+            var port = servers.address().port;
+            console.log("App now running on port", port);
         });
     };
     return {
