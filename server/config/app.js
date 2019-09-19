@@ -63,7 +63,7 @@ module.exports = function() {
     });
 
     // Create link to Angular build directory
-    var distDir = __dirname + "/dist/";
+    var distDir = "dist/";
     console.log(distDir)
     server.use(express.static(distDir));
   };
